@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<script>
+    $(document).ready(function(){
+        var userId = Math.floor(Math.random() * 1000) + 1;
+
+        $("#userId").text(userId);
+        var urlEndPoint = "http://localhost:8080/specification/subcrible/" + userId;
+        var eventSource = new EventSource(urlEndPoint);
+        eventSource.addEventListener("lastestNews", function(event){
+            console.log("event.data " + event.data);
+            var data = JSON.parse(event.data);
+            console.log("data " + JSON.stringify(data));
+            addData(data.title, data.content);
+        });
+
+        function addData(title, content) {
+            var a = document.createElement("article");
+            var h = document.createElement("H3");
+            var t = document.createTextNode(title);
+            h.appendChild(t);
+            var para = document.createElement("P");
+            para.innerHTML = content;
+            a.appendChild(h);
+            a.appendChild(para);
+
+            document.getElementById("content").appendChild(a);
+        }
+    })
+</script>
+<body>
+<div class="container" id="content">
+  <p >Your client Id is <span id="userId"></span></p>
+</div>
+
+</body>
+</html>
